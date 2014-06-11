@@ -21,6 +21,18 @@ class CompilerExtension(Extension):
 
         return nodes.CallBlock(self.call_method('_compile', args), [], [], body).set_lineno(lineno)
 
+    def _find_compilable_tags(self, soup):
+        tags = ['link', 'style', 'script']
+        for tag in soup.find_all(tags):
+            if tag.get('type') is None:
+                if tag.name == 'script':
+                    tag['type'] = 'text/javascript'
+                if tag.name == 'style':
+                    tag['type'] = 'text/css'
+            else:
+                tag['type'] == tag['type'].lower()
+            yield tag
+
     def _render_block(self, filename, type):
         """Returns an html element pointing to filename as a string.
         """
