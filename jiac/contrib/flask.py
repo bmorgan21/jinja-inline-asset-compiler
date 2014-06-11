@@ -5,6 +5,6 @@ class JIAC(object):
             self.init_app(app)
 
     def init_app(self, app):
-        app.jinja_env.add_extension('jac.CompilerExtension')
-        app.jinja_env.compressor_enabled = app.config.get('COMPRESSOR_ENABLED', True)
-        app.jinja_env.compressor_debug = app.config.get('COMPRESSOR_DEBUG', False)
+        app.jinja_env.add_extension('jiac.CompilerExtension')
+        app.jinja_env.compiler_enabled = app.config.get('COMPILER_ENABLED', True)
+        app.jinja_env.compiler_debug = app.config.get('COMPILER_DEBUG', False)

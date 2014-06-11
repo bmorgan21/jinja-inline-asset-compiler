@@ -9,29 +9,17 @@ from . import compile
 
 
 class CompilerExtension(Extension):
-    tags = set(['compress'])
+    tags = set(['compile'])
 
     def parse(self, parser):
         lineno = parser.stream.next().lineno
         args = [parser.parse_expression()]
-        body = parser.parse_statements(['name:endcompress'], drop_needle=True)
+        body = parser.parse_statements(['name:endcompile'], drop_needle=True)
 
         if len(body) > 1:
             raise RuntimeError('One tag supported for now.')
 
         return nodes.CallBlock(self.call_method('_compile', args), [], [], body).set_lineno(lineno)
-
-    def _find_compilable_tags(self, soup):
-        tags = ['link', 'style', 'script']
-        for tag in soup.find_all(tags):
-            if tag.get('type') is None:
-                if tag.name == 'script':
-                    tag['type'] = 'text/javascript'
-                if tag.name == 'style':
-                    tag['type'] = 'text/css'
-            else:
-                tag['type'] == tag['type'].lower()
-            yield tag
 
     def _render_block(self, filename, type):
         """Returns an html element pointing to filename as a string.
@@ -43,34 +31,27 @@ class CompilerExtension(Extension):
         elif type.lower() == 'js':
             return '<script type="text/javascript" src="%s"></script>' % filename
         else:
-            raise RuntimeError('Unsupported type of compression %s' % type)
+            raise RuntimeError('Unsupported type of compiler %s' % type)
 
-    def _compile(self, compression_type, caller):
+    def _compile(self, compiler_type, caller):
         html = caller()
 
-        enabled = (not hasattr(self.environment, 'compressor_enabled') or
-                   self.environment.compressor_enabled is not False)
+        enabled = (not hasattr(self.environment, 'compiler_enabled') or
+                   self.environment.compiler_enabled is not False)
         if not enabled:
             return html
 
-        debug = (hasattr(self.environment, 'compressor_debug') and
-                 self.environment.compressor_debug is True)
-        compression_type = compression_type.lower()
+        debug = (hasattr(self.environment, 'compiler_debug') and
+                 self.environment.compiler_debug is True)
+        compiler_type = compiler_type.lower()
         soup = BeautifulSoup(html)
         compilables = self._find_compilable_tags(soup)
 
         for c in compilables:
             if c.get('type') is None:
-                raise RuntimeError('Tags to be compressed must have a compression_type.')
+                raise RuntimeError('Tags to be compressed must have a compiler_type.')
 
-            c.string
-
-            needs_compile = c['type'] != 'text/javascript'
-            if not debug or needs_compile:
-                text = compile(self._get_contents(src), c['type'], cwd=cwd,
-                               uri_cwd=uri_cwd, debug=debug)
-            else:
-                text = self._get_contents(src)
+            text = compile(c.string, c['type'], debug=debug)
 
             print '!!', text
 

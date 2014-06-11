@@ -1,0 +1,1 @@
+Jinja Inline Asset Compiler
