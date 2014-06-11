@@ -59,12 +59,13 @@ class CompilerExtension(Extension):
         soup = BeautifulSoup(html)
         compilables = self._find_compilable_tags(soup)
 
+        result = []
         for c in compilables:
             if c.get('type') is None:
                 raise RuntimeError('Tags to be compressed must have a compiler_type.')
 
             text = compile(c.string, c['type'], debug=debug)
 
-            print '!!', text
+            result.append('<{} type="{}">{}</{}>'.format(c.name, c['type'], text, c.name))
 
-        return ''
+        return '\n'.join(result)
