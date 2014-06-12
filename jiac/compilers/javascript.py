@@ -26,7 +26,7 @@ class JavaScriptCompiler(object):
             else:
                 raise RuntimeError('Test this :S %s' % stderr)
 
-        if debug:
+        if not debug:
             args = ['uglifyjs', '-', '-c']
 
             handler = subprocess.Popen(args, stdout=subprocess.PIPE,
