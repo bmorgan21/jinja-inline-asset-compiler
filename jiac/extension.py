@@ -20,7 +20,8 @@ class CompilerExtension(Extension):
 
         data = body[0].nodes[0].data
         print '!! DATA', data
-        html = self._compile(data)
+        # html = self._compile(data)
+        html = '<b>hello</b>'
         print '!! HTML', html
         return nodes.Output([nodes.Const(Markup(html))]).set_lineno(lineno)
 
