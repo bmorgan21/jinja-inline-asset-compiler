@@ -19,6 +19,9 @@ class CompilerExtension(Extension):
         if len(body) > 1:
             raise RuntimeError('One tag supported for now.')
 
+        if len(body[0].nodes) > 1:
+            raise RuntimeError('One tag supported for now.')
+
         data = body[0].nodes[0].data
         html = self._compile(data)
         return nodes.Output([nodes.Const(Markup(html))]).set_lineno(lineno)
