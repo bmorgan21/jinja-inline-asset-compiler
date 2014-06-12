@@ -2,7 +2,7 @@ import os
 import tempfile
 
 from bs4 import BeautifulSoup
-from jinja2 import nodes
+from jinja2 import nodes, Markup
 from jinja2.ext import Extension
 
 from . import compile
@@ -13,13 +13,12 @@ class CompilerExtension(Extension):
 
     def parse(self, parser):
         lineno = parser.stream.next().lineno
-        args = [parser.parse_expression()]
         body = parser.parse_statements(['name:endcompile'], drop_needle=True)
 
         if len(body) > 1:
             raise RuntimeError('One tag supported for now.')
 
-        return nodes.CallBlock(self.call_method('_compile', args), [], [], body).set_lineno(lineno)
+        return nodes.Output([nodes.Const(self._compile(Markup(body[0].nodes[0].data)))])
 
     def _find_compilable_tags(self, soup):
         tags = ['link', 'style', 'script']
@@ -45,9 +44,7 @@ class CompilerExtension(Extension):
         else:
             raise RuntimeError('Unsupported type of compiler %s' % type)
 
-    def _compile(self, compiler_type, caller):
-        html = caller()
-
+    def _compile(self, html):
         enabled = (not hasattr(self.environment, 'compiler_enabled') or
                    self.environment.compiler_enabled is not False)
         if not enabled:
@@ -55,7 +52,6 @@ class CompilerExtension(Extension):
 
         debug = (hasattr(self.environment, 'compiler_debug') and
                  self.environment.compiler_debug is True)
-        compiler_type = compiler_type.lower()
         soup = BeautifulSoup(html)
         compilables = self._find_compilable_tags(soup)
 
