@@ -3,6 +3,7 @@ import tempfile
 
 from bs4 import BeautifulSoup
 from jinja2 import nodes, Markup
+from jinja2.exceptions import TemplateAssertionError
 from jinja2.ext import Extension
 
 from . import compile
@@ -13,14 +14,14 @@ class CompilerExtension(Extension):
 
     def parse(self, parser):
         lineno = parser.stream.next().lineno
-        args = [parser.parse_expression()]
+        parser.parse_expression()  # process the tag
         body = parser.parse_statements(['name:endcompile'], drop_needle=True)
 
         if len(body) > 1:
-            raise RuntimeError('One tag supported for now.')
+            raise TemplateAssertionError('One tag supported for now.', lineno, parser.name, parser.filename)
 
         if len(body[0].nodes) > 1:
-            raise RuntimeError('One tag supported for now.')
+            raise TemplateAssertionError('Tag disallowed.', body[0].nodes[1].lineno, parser.name, parser.filename)
 
         data = body[0].nodes[0].data
         html = self._compile(data)
