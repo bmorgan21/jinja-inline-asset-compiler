@@ -14,7 +14,7 @@ class JavaScriptCompiler(object):
         output = what
 
         if mimetype == 'text/coffeescript':
-            args = ['coffeescript', '-c', '-p', '-s']
+            args = ['coffee', '-c', '-p', '-s']
 
             handler = subprocess.Popen(args, stdout=subprocess.PIPE,
                                        stdin=subprocess.PIPE,
