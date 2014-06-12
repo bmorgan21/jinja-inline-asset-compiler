@@ -5,7 +5,7 @@ from . import CompilerMeta
 
 class JavaScriptCompiler(object):
     __metaclass__ = CompilerMeta
-    supported_mimetypes = ['text/javascript', 'text/coffeescript']
+    supported_mimetypes = ['application/javascript', 'text/javascript', 'text/coffeescript']
 
     @classmethod
     def compile(cls, what, mimetype='text/javascript', cwd=None,
@@ -27,7 +27,7 @@ class JavaScriptCompiler(object):
                 raise RuntimeError('Test this :S %s' % stderr)
 
         if not debug:
-            args = ['uglifyjs', '-', '-c']
+            args = ['uglifyjs', '-', '-c', '-m']
 
             handler = subprocess.Popen(args, stdout=subprocess.PIPE,
                                        stdin=subprocess.PIPE,
