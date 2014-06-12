@@ -28,7 +28,7 @@ class CompilerExtension(Extension):
         return nodes.Output([nodes.Const(Markup(html))]).set_lineno(lineno)
 
     def _find_compilable_tags(self, soup):
-        tags = ['link', 'style', 'script']
+        tags = ['style', 'script']
         for tag in soup.find_all(tags):
             if tag.get('type') is None:
                 if tag.name == 'script':
@@ -39,17 +39,13 @@ class CompilerExtension(Extension):
                 tag['type'] == tag['type'].lower()
             yield tag
 
-    def _render_block(self, filename, type):
-        """Returns an html element pointing to filename as a string.
-        """
-        filename = '%s/%s' % (self.environment.compressor_static_prefix, os.path.basename(filename))
+    def _tag_type(self, name):
+        if name.lower() == 'script':
+            return 'text/javascript'
+        elif name.lower() == 'style':
+            return 'text/css'
 
-        if type.lower() == 'css':
-            return '<link type="text/css" rel="stylesheet" href="%s" />' % filename
-        elif type.lower() == 'js':
-            return '<script type="text/javascript" src="%s"></script>' % filename
-        else:
-            raise RuntimeError('Unsupported type of compiler %s' % type)
+        raise RuntimeError('Unsupported tag name {}'.format(name))
 
     def _compile(self, html):
         enabled = (not hasattr(self.environment, 'compiler_enabled') or
@@ -69,6 +65,6 @@ class CompilerExtension(Extension):
 
             text = compile(c.string, c['type'], debug=debug)
 
-            result.append('<{} type="{}">{}</{}>'.format(c.name, c['type'], text, c.name))
+            result.append('<{} type="{}">{}</{}>'.format(c.name, self._tag_type(c.name), text, c.name))
 
         return '\n'.join(result)
