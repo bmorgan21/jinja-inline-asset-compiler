@@ -29,6 +29,10 @@ class JavaScriptCompiler(object):
         if debug:
             args = ['uglifyjs', '-', '-c']
 
+            handler = subprocess.Popen(args, stdout=subprocess.PIPE,
+                                       stdin=subprocess.PIPE,
+                                       stderr=subprocess.PIPE, cwd=None)
+
             (stdout, stderr) = handler.communicate(input=output)
             if handler.returncode == 0:
                 output = stdout
