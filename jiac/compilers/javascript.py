@@ -27,7 +27,7 @@ class JavaScriptCompiler(object):
                 raise RuntimeError('Test this :S %s' % stderr)
 
         if debug:
-            args = ['uglify-js', '-', '-c']
+            args = ['uglifyjs', '-', '-c']
 
             (stdout, stderr) = handler.communicate(input=output)
             if handler.returncode == 0:
