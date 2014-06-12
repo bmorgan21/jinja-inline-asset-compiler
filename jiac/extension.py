@@ -18,9 +18,11 @@ class CompilerExtension(Extension):
         if len(body) > 1:
             raise RuntimeError('One tag supported for now.')
 
-        html = self._compile(body[0].nodes[0].data)
+        data = body[0].nodes[0].data
+        print '!! DATA', data
+        html = self._compile(data)
         print '!! HTML', html
-        return nodes.Output([nodes.Const(Markup(html))])
+        return nodes.Output([nodes.Const(Markup(html))]).set_lineno(lineno)
 
     def _find_compilable_tags(self, soup):
         tags = ['link', 'style', 'script']
