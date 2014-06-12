@@ -65,6 +65,6 @@ class CompilerExtension(Extension):
 
             text = compile(c.string, c['type'], debug=debug)
 
-            result.append('<{} type="{}">{}</{}>'.format(c.name, self._tag_type(c.name), text, c.name))
+            result.append('<{} type="{}">\n{}\n</{}>'.format(c.name, self._tag_type(c.name), text, c.name))
 
         return '\n'.join(result)
