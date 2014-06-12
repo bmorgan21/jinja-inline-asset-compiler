@@ -13,16 +13,14 @@ class CompilerExtension(Extension):
 
     def parse(self, parser):
         lineno = parser.stream.next().lineno
+        args = [parser.parse_expression()]
         body = parser.parse_statements(['name:endcompile'], drop_needle=True)
 
         if len(body) > 1:
             raise RuntimeError('One tag supported for now.')
 
         data = body[0].nodes[0].data
-        print '!! DATA', data
-        # html = self._compile(data)
-        html = '<b>hello</b>'
-        print '!! HTML', html
+        html = self._compile(data)
         return nodes.Output([nodes.Const(Markup(html))]).set_lineno(lineno)
 
     def _find_compilable_tags(self, soup):
