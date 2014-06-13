@@ -16,7 +16,7 @@ class CompilerMeta(type):
         return cls
 
 
-def compile(what, mimetype, cwd=None, uri_cwd=None, debug=None):
+def compile(what, mimetype, include_path=None, debug=None):
     """
     Compile a given text based on mimetype.
     """
@@ -26,8 +26,7 @@ def compile(what, mimetype, cwd=None, uri_cwd=None, debug=None):
     except KeyError:
         raise RuntimeError('Compiler for mimetype %s not found.' % mimetype)
 
-    return compiler.compile(what, mimetype.lower(), cwd=cwd,
-                            uri_cwd=uri_cwd, debug=debug)
+    return compiler.compile(what, mimetype.lower(), include_path=include_path, debug=debug)
 
 
 from .less import LessCompiler
