@@ -11,7 +11,6 @@ class CompilerExtension(Extension):
 
     def parse(self, parser):
         lineno = parser.stream.next().lineno
-        parser.parse_expression()  # process the tag
         body = parser.parse_statements(['name:endcompile'], drop_needle=True)
 
         if len(body) > 1:
