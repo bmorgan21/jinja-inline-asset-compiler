@@ -8,8 +8,7 @@ class JavaScriptCompiler(object):
     supported_mimetypes = ['application/javascript', 'text/javascript', 'text/coffeescript']
 
     @classmethod
-    def compile(cls, what, mimetype='text/javascript', cwd=None,
-                uri_cwd=None, debug=None):
+    def compile(cls, what, mimetype='text/javascript', include_path=None, debug=None):
 
         output = what
 

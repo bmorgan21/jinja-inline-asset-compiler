@@ -1,6 +1,3 @@
-import os
-import tempfile
-
 from bs4 import BeautifulSoup
 from jinja2 import nodes, Markup
 from jinja2.exceptions import TemplateAssertionError
@@ -55,6 +52,13 @@ class CompilerExtension(Extension):
 
         debug = (hasattr(self.environment, 'compiler_debug') and
                  self.environment.compiler_debug is True)
+
+        include_path = (hasattr(self.environment, 'compiler_include_path') and
+                        self.environment.compiler_include_path)
+
+        if include_path and not isinstance(include_path, (list, tuple)):
+            include_path = [include_path]
+
         soup = BeautifulSoup(html)
         compilables = self._find_compilable_tags(soup)
 
@@ -63,7 +67,7 @@ class CompilerExtension(Extension):
             if c.get('type') is None:
                 raise RuntimeError('Tags to be compressed must have a compiler_type.')
 
-            text = compile(c.string, c['type'], debug=debug)
+            text = compile(c.string, c['type'], include_path=include_path, debug=debug)
 
             result.append('<{} type="{}">\n{}\n</{}>'.format(c.name, self._tag_type(c.name), text.strip(), c.name))
 

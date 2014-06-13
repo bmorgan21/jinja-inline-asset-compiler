@@ -1,3 +1,4 @@
+import os
 import subprocess
 
 from . import CompilerMeta
@@ -8,21 +9,15 @@ class LessCompiler(object):
     supported_mimetypes = ['text/less', 'text/css']
 
     @classmethod
-    def compile(cls, what, mimetype='text/less', cwd=None, uri_cwd=None,
-                debug=None):
+    def compile(cls, what, mimetype='text/less', include_path=None, debug=None):
         args = ['lessc']
 
         if not debug:
             args += ['--compress']
 
-        if cwd:
-            args += ['-ru']
-            args += ['--include-path={}'.format(cwd)]
-
-        if uri_cwd:
-            if not uri_cwd.endswith('/'):
-                uri_cwd += '/'
-            args += ['--rootpath={}'.format(uri_cwd)]
+        if include_path:
+            sep = ';' if os.name == 'nt' else ':'
+            args += ['--include_path={}'.format(sep.join(include_path))]
 
         args += ['-']
 

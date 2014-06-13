@@ -8,3 +8,4 @@ class JIAC(object):
         app.jinja_env.add_extension('jiac.CompilerExtension')
         app.jinja_env.compiler_enabled = app.config.get('COMPILER_ENABLED', True)
         app.jinja_env.compiler_debug = app.config.get('COMPILER_DEBUG', False)
+        app.jinja_env.compiler_include_path = app.config.get('COMPILER_INCLUDE_PATH', [])
