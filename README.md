@@ -43,7 +43,7 @@ For CoffeeScript support, install [coffee-script](https://www.npmjs.org/package/
     app = Flask(__name__)
     app.config['COMPILER_ENABLED'] = True
     app.config['COMPILER_DEBUG'] = app.config.get('DEBUG')
-    app.config['COMPILER_INCLUDE_PATH'] = os.path.join(__file__, 'web/static')
+    app.config['COMPILER_INCLUDE_PATH'] = os.path.join(os.path.dirname(__file__), 'web/static')
 
     jiac = JIAC(app)
 
