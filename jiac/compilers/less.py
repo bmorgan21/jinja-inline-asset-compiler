@@ -17,7 +17,7 @@ class LessCompiler(object):
 
         if include_path:
             sep = ';' if os.name == 'nt' else ':'
-            args += ['--include_path={}'.format(sep.join(include_path))]
+            args += ['--include-path="{}"'.format(sep.join(include_path))]
 
         args += ['-']
 
