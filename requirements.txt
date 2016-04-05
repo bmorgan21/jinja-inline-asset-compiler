@@ -1,2 +1,0 @@
-Jinja2
-beautifulsoup4==4.3.2

@@ -29,5 +29,5 @@ def compile(what, mimetype, include_path=None, debug=None):
     return compiler.compile(what, mimetype.lower(), include_path=include_path, debug=debug)
 
 
-from .less import LessCompiler
-from .javascript import JavaScriptCompiler
+from .less import LessCompiler  # noqa
+from .javascript import JavaScriptCompiler  # noqa
